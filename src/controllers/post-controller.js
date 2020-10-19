@@ -2,9 +2,6 @@
 
 const ValidationContract = require("../validators/fluent-validator");
 const repository = require("../repositories/post-repository");
-const azure = require("azure-storage");
-const guid = require("guid");
-const config = require("../config");
 
 exports.get = async (req, res, next) => {
   try {
@@ -31,7 +28,7 @@ exports.post = async (req, res, next) => {
     "Body must contain at least 3 characters"
   );
 
-  // Se os dados forem inválidos
+  // If data is invalid
   if (!contract.isValid()) {
     res.status(400).send(contract.errors()).end();
     return;

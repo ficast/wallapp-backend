@@ -1,12 +1,21 @@
-'use strict';
-const config = require('../config');
-const sendgrid = require('sendgrid')(config.sendgridKey);
+"use strict";
+const config = require("../config");
+const sgMail = require("@sendgrid/mail");
 
-exports.send = async (to, subject, body) => {
-    sendgrid.send({
-        to: to,
-        from: 'hello@thewall.io',
-        subject: subject,
-        html: body
+sgMail.setApiKey(config.sendgridKey);
+
+exports.send = async (to, subject, html) => {
+  try {
+    await sgMail.send({
+      to,
+      from: "filipe@queplanta.com",
+      subject,
+      text: "Wellcome to The Wall",
+      html,
     });
-}
+
+    console.log("Email sent");
+  } catch (error) {
+    console.error(error);
+  }
+};
