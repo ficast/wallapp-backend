@@ -15,7 +15,7 @@ exports.authorize = function (req, res, next) {
 
     if (!token) {
         res.status(401).json({
-            message: 'Restricted Area'
+            message: 'Restricted Access'
         });
     } else {
         jwt.verify(token, global.SALT_KEY, function (error, decoded) {
@@ -48,7 +48,7 @@ exports.isAdmin = function (req, res, next) {
                     next();
                 } else {
                     res.status(403).json({
-                        message: 'Restricted Area'
+                        message: 'Restricted Access'
                     });
                 }
             }

@@ -11,5 +11,3 @@ router.put("/:id", authService.isAdmin, controller.put);
 router.delete("/", authService.isAdmin, controller.delete);
 
 module.exports = router;
-
-// authService.isAdmin

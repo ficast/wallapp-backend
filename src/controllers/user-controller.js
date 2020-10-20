@@ -76,7 +76,7 @@ exports.authenticate = async (req, res, next) => {
     });
 
     res.status(201).send({
-      token: token,
+      token,
       data: {
         email: user.email,
         name: user.name,
