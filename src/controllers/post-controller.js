@@ -4,10 +4,14 @@ const ValidationContract = require("../validators/fluent-validator");
 const repository = require("../repositories/post-repository");
 
 exports.get = async (req, res, next) => {
+  const { page } = req.query;
+  console.log(page)
+
   try {
-    const data = await repository.get();
+    const data = await repository.get(page);
     res.status(200).send(data);
   } catch (e) {
+    console.log(e)
     res.status(500).send({
       message: "Something went wrong",
     });
@@ -38,7 +42,7 @@ exports.post = async (req, res, next) => {
     await repository.create({
       title: req.body.title,
       body: req.body.body,
-      author: req.body.author
+      author: req.body.author,
     });
     res.status(201).send({
       message: "Post successfully created",
