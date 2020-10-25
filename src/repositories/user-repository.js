@@ -2,13 +2,13 @@
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 
-exports.get = async() => {
-  const res = await User.find({}, "id, name")
+exports.get = async () => {
+  const res = await User.find({}, "id, name");
   return res;
-}
+};
 
 exports.create = async (data) => {
-  let user = new User(data);
+  const user = new User(data);
   await user.save();
 };
 

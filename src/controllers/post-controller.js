@@ -5,7 +5,6 @@ const repository = require("../repositories/post-repository");
 
 exports.get = async (req, res, next) => {
   const { page } = req.query;
-  console.log(page)
 
   try {
     const data = await repository.get(page);
