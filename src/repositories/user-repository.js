@@ -24,3 +24,8 @@ exports.getById = async (id) => {
   const res = await User.findById(id);
   return res;
 };
+
+exports.delete = async (email) => {
+  const res = await User.findOneAndRemove({ email });
+  return res;
+};

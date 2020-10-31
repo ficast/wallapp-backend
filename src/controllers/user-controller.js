@@ -113,7 +113,7 @@ exports.refreshToken = async (req, res, next) => {
       return;
     }
 
-    const tokenData = await authService.generateToken({
+    const newToken = await authService.generateToken({
       id: user._id,
       email: user.email,
       name: user.name,
@@ -121,11 +121,30 @@ exports.refreshToken = async (req, res, next) => {
     });
 
     res.status(201).send({
-      token: token,
+      token: newToken,
       data: {
         email: user.email,
         name: user.name,
       },
+    });
+  } catch (e) {
+    res.status(500).send({
+      message: "Something went wrong",
+    });
+  }
+};
+
+exports.delete = async (req, res, next) => {
+  try {
+    const status = await repository.delete(req.body.email);
+    console.log(status);
+
+    if (!status) return res.status(404).send({
+      message: "User not found",
+    });
+
+    res.status(200).send({
+      message: "User successfully deleted",
     });
   } catch (e) {
     res.status(500).send({
