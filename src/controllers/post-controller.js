@@ -2,6 +2,7 @@
 
 const ValidationContract = require("../validators/fluent-validator");
 const repository = require("../repositories/post-repository");
+const { decodeToken } = require("../services/auth-service");
 
 exports.get = async (req, res, next) => {
   const { page } = req.query;
@@ -10,7 +11,7 @@ exports.get = async (req, res, next) => {
     const data = await repository.get(page);
     res.status(200).send(data);
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(500).send({
       message: "Something went wrong",
     });
@@ -37,11 +38,15 @@ exports.post = async (req, res, next) => {
     return;
   }
 
+  const token =
+    req.body.token || req.query.token || req.headers["x-access-token"];
+  const data = decodeToken(token);
+
   try {
     await repository.create({
       title: req.body.title,
       body: req.body.body,
-      author: req.body.author,
+      author: data.id,
     });
     res.status(201).send({
       message: "Post successfully created",
