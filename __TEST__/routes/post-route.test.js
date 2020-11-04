@@ -1,8 +1,8 @@
+require("dotenv").config();
 const axios = require("axios");
 const authAsAdmin = require("../authAsAdmin");
-require("dotenv").config();
 
-const URL_BASE = process.env.URL_BASE;
+const URL_BASE = `${process.env.URL_BASE}/post`;
 
 describe("Testing /post route", () => {
   test("List all posts ", async () => {
