@@ -9,7 +9,7 @@ exports.get = async () => {
 
 exports.create = async (data) => {
   const user = new User(data);
-  await user.save();
+  const res = await user.save();
 };
 
 exports.authenticate = async (data) => {
