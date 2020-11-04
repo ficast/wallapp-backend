@@ -56,8 +56,8 @@ exports.post = async (req, res, next) => {
       message: "User registration with success!",
     });
   } catch (e) {
-    res.status(500).send({
-      message: "Something went wrong!",
+    res.status(409).send({
+      message: "User already exists!",
     });
   }
 };
@@ -139,9 +139,10 @@ exports.delete = async (req, res, next) => {
     const status = await repository.delete(req.body.email);
     console.log(status);
 
-    if (!status) return res.status(404).send({
-      message: "User not found",
-    });
+    if (!status)
+      return res.status(404).send({
+        message: "User not found",
+      });
 
     res.status(200).send({
       message: "User successfully deleted",
