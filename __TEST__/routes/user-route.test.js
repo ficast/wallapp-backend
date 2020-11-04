@@ -2,7 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const authAsAdmin = require("../authAsAdmin");
 
-const URL_BASE = `${process.env.URL_BASE}/user`;
+const URL_BASE = `http://localhost:3000/user`;
 
 describe("Testing /user route", () => {
   test("List all Users ", async () => {
