@@ -1,6 +1,7 @@
 const axios = require("axios");
+require("dotenv").config();
 
-const URL_BASE = 'http://localhost:3000/'
+const URL_BASE = process.env.URL_BASE;
 
 describe("Testing / route", () => {
   test("Check API response GET on / ", async () => {

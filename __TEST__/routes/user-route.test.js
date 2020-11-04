@@ -1,18 +1,11 @@
 const axios = require("axios");
-require("jest");
+const authAsAdmin = require("../authAsAdmin");
+require("dotenv").config();
 
-const URL_BASE = "http://localhost:3000/user";
-
-const authAsAdmin = async () => {
-  const response = await axios.post(`${URL_BASE}/authenticate`, {
-    email: "filipeyoga@gmail.com",
-    password: 123456789,
-  });
-  return response.data.token;
-};
+const URL_BASE = process.env.URL_BASE;
 
 describe("Testing /user route", () => {
-  test("List every User ", async () => {
+  test("List all Users ", async () => {
     const response = await axios.get(URL_BASE);
     expect(response.status).toEqual(200);
     expect(response.data).toContainEqual({
@@ -22,7 +15,7 @@ describe("Testing /user route", () => {
     expect(response.data.length).toBeGreaterThan(0);
   });
 
-  test("Create User ", async () => {
+  test("Create new User ", async () => {
     const response = await axios.post(URL_BASE, {
       name: "Test User",
       email: "test@user.com",
@@ -30,6 +23,19 @@ describe("Testing /user route", () => {
     });
     expect(response.status).toEqual(201);
     expect(response.data.message).toEqual("User registration with success!");
+  });
+
+  test("Create existent User ", async () => {
+    try {
+      await axios.post(URL_BASE, {
+        name: "Test User",
+        email: "test@user.com",
+        password: "123456789",
+      });
+    } catch (err) {
+      expect(err.response.status).toEqual(409);
+      expect(err.response.data.message).toEqual("User already exists!");
+    }
   });
 
   test("Delete User ", async () => {
@@ -43,4 +49,20 @@ describe("Testing /user route", () => {
     expect(response.status).toEqual(200);
     expect(response.data.message).toEqual("User successfully deleted");
   });
+});
+
+test("Refresh token without auth", async () => {
+  try {
+    await axios.post(`${URL_BASE}/refresh-token`);
+  } catch (err) {
+    expect(err.response.status).toEqual(401);
+    expect(err.response.data.message).toEqual("Restricted Access");
+  }
+});
+
+test("Refresh token", async () => {
+  const token = await authAsAdmin();
+  response = await axios.post(`${URL_BASE}/refresh-token`, { token });
+  expect(response.status).toEqual(201);
+  expect(response.data.token).toBeDefined();
 });
