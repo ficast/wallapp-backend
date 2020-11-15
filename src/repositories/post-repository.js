@@ -3,11 +3,14 @@ const mongoose = require("mongoose");
 const Post = mongoose.model("Post");
 
 exports.get = async (page) => {
-  const res = await Post.find({})
+  const items = await Post.find({})
     .sort({ updatedAt: "desc", createdAt: "desc" })
-    .populate("author", "name");
-  const pages = Math.ceil(res.length() / 10);
-  const items = await res.skip(page * 10).limit(10);
+    .populate("author", "name")
+    .skip(page * 10)
+    .limit(10);
+
+  const totalItems = await Post.find({});
+  const pages = Math.ceil(Array.from(totalItems).length / 10);
 
   return { items, pages };
 };
