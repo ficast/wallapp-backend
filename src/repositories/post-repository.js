@@ -7,8 +7,9 @@ exports.get = async (page) => {
     .sort({ updatedAt: "desc", createdAt: "desc" })
     .populate("author", "name");
   const pages = Math.ceil(res.length() / 10);
+  const items = await res.skip(page * 10).limit(10);
 
-  return { items: res.skip(page * 10).limit(10), pages };
+  return { items, pages };
 };
 
 exports.create = async (data) => {
