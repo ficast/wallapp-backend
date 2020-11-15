@@ -5,10 +5,10 @@ const Post = mongoose.model("Post");
 exports.get = async (page) => {
   const res = await Post.find({})
     .sort({ updatedAt: "desc", createdAt: "desc" })
-    .skip(page * 10)
-    .limit(10)
     .populate("author", "name");
-  return res;
+  const pages = Math.ceil(res.length() / 10);
+
+  return { items: res.skip(page * 10).limit(10), pages };
 };
 
 exports.create = async (data) => {
