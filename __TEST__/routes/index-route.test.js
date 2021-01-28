@@ -9,7 +9,7 @@ describe("Testing / route", () => {
     expect(response.status).toEqual(200);
     expect(response.data).toEqual({
       title: "The Wall App",
-      version: "0.0.2",
+      version: "1.0.3",
     });
   });
 });
