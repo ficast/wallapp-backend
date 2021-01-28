@@ -12,10 +12,9 @@ exports.create = async (data) => {
   const res = await user.save();
 };
 
-exports.authenticate = async (data) => {
+exports.authenticate = async (email) => {
   const res = await User.findOne({
-    email: data.email,
-    password: data.password,
+    email,
   });
   return res;
 };

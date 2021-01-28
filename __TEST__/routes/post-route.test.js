@@ -2,24 +2,23 @@ require("dotenv").config();
 const axios = require("axios");
 const authAsAdmin = require("../authAsAdmin");
 
-const URL_BASE = `http://localhost:3000/post`;
+const URL_BASE = process.env.URL_BASE + "post";
 
 describe("Testing /post route", () => {
   test("List all posts ", async () => {
     const response = await axios.get(URL_BASE);
     expect(response.status).toEqual(200);
-    expect(response.data.length).toBeGreaterThan(0);
+    expect(Number(response.data.items.length)).toBeGreaterThan(0);
   });
 
   test("List last 10 posts ", async () => {
     const response = await axios.get(`${URL_BASE}/?page=0`);
     expect(response.status).toEqual(200);
-    expect(response.data.length).toBe(10);
+    expect(Number(response.data.items.length)).toBe(10);
   });
 
   test("Create new post ", async () => {
     const token = await authAsAdmin();
-    console.log(token);
     const response = await axios.post(URL_BASE, {
       title: "Loren ex",
       body:

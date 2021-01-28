@@ -2,15 +2,15 @@ require("dotenv").config();
 const axios = require("axios");
 const authAsAdmin = require("../authAsAdmin");
 
-const URL_BASE = `http://localhost:3000/user`;
+const URL_BASE = process.env.URL_BASE + "user";
 
 describe("Testing /user route", () => {
   test("List all Users ", async () => {
     const response = await axios.get(URL_BASE);
     expect(response.status).toEqual(200);
     expect(response.data).toContainEqual({
-      name: "Filipe Oliveira",
-      _id: "5f94cd241edffe34020cb923",
+      name: "Filipe de Castro",
+      _id: "6011fcdaa72bf8bfe5d06456",
     });
     expect(response.data.length).toBeGreaterThan(0);
   });

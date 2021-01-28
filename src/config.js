@@ -1,6 +1,7 @@
 require("dotenv").config();
+const bcrypt = require("bcryptjs");
 
-global.SALT_KEY = "f5b99242-6504-4ca3-90f2-05e78e5761ef";
+global.SALT_KEY = bcrypt.genSaltSync(10);
 global.EMAIL_TMPL = "Hello <strong>{0}</strong>, welcome to The Wall!";
 
 module.exports = {
