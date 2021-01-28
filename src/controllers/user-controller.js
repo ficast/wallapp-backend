@@ -2,7 +2,7 @@
 
 const ValidationContract = require("../validators/fluent-validator");
 const repository = require("../repositories/user-repository");
-const CryptoJS = require("crypto-js");
+const bcrypt = require("bcryptjs");
 const authService = require("../services/auth-service");
 const emailService = require("../services/email-service");
 
@@ -37,9 +37,7 @@ exports.post = async (req, res, next) => {
     return;
   }
 
-  const password = CryptoJS.AES.encrypt(
-    req.body.password + global.SALT_KEY
-  ).toString();
+  const password = bcrypt.hashSync(String(req.body.password), global.SALT_KEY);
 
   try {
     await repository.create({
@@ -66,24 +64,26 @@ exports.post = async (req, res, next) => {
 };
 
 exports.authenticate = async (req, res, next) => {
-  const password = CryptoJS.AES.encrypt(
-    req.body.password + global.SALT_KEY
-  ).toString();
-
   try {
-    const user = await repository.authenticate({
-      email: req.body.email,
-      password,
-    });
+    const user = await repository.authenticate(req.body.email);
 
     if (!user) {
-      res.status(404).send({
-        message: "Invalid user or password",
+      res.status(401).send({
+        message: "Unauthorized",
       });
       return;
     }
 
-    const token = await authService.generateToken({
+    const passAuth = bcrypt.compare(String(user.password), global.SALT_KEY);
+
+    if (!passAuth) {
+      res.status(401).send({
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const token = authService.generateToken({
       id: user._id,
       email: user.email,
       name: user.name,
@@ -144,7 +144,6 @@ exports.refreshToken = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
   try {
     const status = await repository.delete(req.body.email);
-    console.log(status);
 
     if (!status)
       return res.status(404).send({
